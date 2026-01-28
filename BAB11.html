@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB11</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB1</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Latihan Kosakata</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .card {
+    background: white;
+    padding: 30px;
+    width: 400px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  input {
+    width: 90%;
+    padding: 8px;
+    margin-top: 15px;
+  }
+  button {
+    margin-top: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  .result {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .wrong { color: red; }
+  .correct { color: green; }
+  ol { text-align:left; max-height:400px; overflow:auto; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2 id="question"></h2>
+  <input type="text" id="answerInput" placeholder="Tulis jawaban di sini">
+  <br>
+  <button id="nextBtn">Selanjutnya</button>
+</div>
+
+<script>
+let questions = [
+{ soal: "집안일", jawaban: "pekerjaan rumah tangga" },
+{ soal: "주택가의", jawaban: "perumahan" },
+{ soal: "캔", jawaban: "kaleng" },
+{ soal: "골목", jawaban: "lorong, gang" },
+{ soal: "유리병", jawaban: "botol kaca" },
+{ soal: "수거장", jawaban: "tempat pengumpulan sampah" },
+{ soal: "따로", jawaban: "terpisah" },
+{ soal: "메뉴", jawaban: "menu" },
+{ soal: "버리다", jawaban: "membuang" },
+{ soal: "냉장고", jawaban: "kulkas" },
+{ soal: "쓰레기", jawaban: "sampah" },
+{ soal: "책상", jawaban: "meja belajar" },
+{ soal: "일반 쓰레기", jawaban: "sampah biasa" },
+{ soal: "바닥", jawaban: "lantai" },
+{ soal: "음식물 쓰레기", jawaban: "sampah makanan" },
+{ soal: "침대", jawaban: "tempat tidur" },
+{ soal: "재활 용품", jawaban: "daur ulang" },
+{ soal: "창문", jawaban: "jendela" },
+{ soal: "헌옷", jawaban: "baju bekas" },
+{ soal: "갑자기", jawaban: "tiba-tiba" },
+{ soal: "쓰레기 봉투", jawaban: "kantong sampah" },
+{ soal: "의류", jawaban: "pakaian" },
+{ soal: "수거함", jawaban: "tempat sampah daur ulang" },
+{ soal: "왜", jawaban: "mengapa" },
+{ soal: "세탁기를 돌리다", jawaban: "menyalakan mesin cuci" },
+{ soal: "폐기물", jawaban: "limbah / sampah" },
+{ soal: "빨래를 널다", jawaban: "menjemur pakaian" },
+{ soal: "도와주다", jawaban: "membantu" },
+{ soal: "빨래를 걷다", jawaban: "mengangkat pakaian" },
+{ soal: "스티커", jawaban: "sticker" },
+{ soal: "옷을 다리다", jawaban: "menyetrika baju" },
+{ soal: "그러면", jawaban: "kalau begitu" },
+{ soal: "옷을 개다", jawaban: "melipat baju" },
+{ soal: "비용", jawaban: "biaya" },
+{ soal: "먼지를 털다", jawaban: "mengelap debu" },
+{ soal: "천천히", jawaban: "pelan-pelan" },
+{ soal: "정리하다", jawaban: "merapikan" },
+{ soal: "대형 쓰레기", jawaban: "sampah ukuran besar" },
+{ soal: "빗자루", jawaban: "sapu" },
+{ soal: "종량제", jawaban: "pembayaran berdasarkan volume sampah" },
+{ soal: "쓸다", jawaban: "menyapu" },
+{ soal: "수퍼마켓", jawaban: "supermarket" },
+{ soal: "청소기를 돌리다", jawaban: "menyalakan vacuum cleaner" },
+{ soal: "최대한", jawaban: "sebisa mungkin" },
+{ soal: "닦다", jawaban: "mengelap" },
+{ soal: "제거한", jawaban: "dibuang" },
+{ soal: "밥을 하다 / 짓다", jawaban: "memasak nasi" },
+{ soal: "닭뼈", jawaban: "tulang ayam" },
+{ soal: "음식을 만들다", jawaban: "membuat makanan" },
+{ soal: "수거통", jawaban: "tempat sampah" },
+{ soal: "담요", jawaban: "selimut" },
+{ soal: "설거지를 하다", jawaban: "mencuci piring" },
+{ soal: "밥솥", jawaban: "rice cooker" },
+{ soal: "냄비", jawaban: "panci" },
+{ soal: "프라이팬", jawaban: "wajan" },
+{ soal: "행정복지센터", jawaban: "pusat administrasi dan kesejahteraan" },
+{ soal: "달걀 껍데기", jawaban: "cangkang telur" },
+{ soal: "동물", jawaban: "hewan" },
+];
+
+// Acak soal
+questions = questions.sort(() => Math.random() - 0.5);
+
+let index = 0;
+let score = 0;
+let userAnswers = [];
+
+const questionEl = document.getElementById("question");
+const answerInput = document.getElementById("answerInput");
+const nextBtn = document.getElementById("nextBtn");
+const card = document.querySelector(".card");
+
+function showQuestion() {
+  questionEl.textContent = "Soal " + (index + 1) + ": " + questions[index].soal;
+  answerInput.value = "";
+  answerInput.focus();
+}
+
+nextBtn.addEventListener("click", () => {
+  const userAnswer = answerInput.value.trim().toLowerCase();
+  userAnswers[index] = userAnswer; // simpan jawaban sesuai index
+
+  if (userAnswer === questions[index].jawaban) {
+    score++;
+  }
+
+  index++;
+  if (index < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+});
+
+function showResult() {
+  let answerList = "";
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === q.jawaban) {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span></li>`;
+    } else {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span><br>
+                     Jawaban kamu: <span class="wrong">${userAnswers[i] || "(kosong)"}</span></li>`;
+    }
+  });
+
+  card.innerHTML = `
+    <h2>Hasil</h2>
+    <p class="result">Nilai: ${score} / ${questions.length}</p>
+    <hr>
+    <p>Kunci Jawaban:</p>
+    <ol>${answerList}</ol>
+  `;
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
